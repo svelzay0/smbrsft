@@ -17,21 +17,21 @@
                     {{ 'Список лиг' }}
                   </v-btn>
                   <v-btn 
-                  :to="{ name: 'Teams' }"
+                  :to="{ name: 'Teams', params:{ year: currentYear } }"
                   id="2"
                   value="Список команд"
                   >
                     {{ 'Список команд' }}
                   </v-btn>
                   <v-btn 
-                  :to="{ name: 'LeagueCalendar' }"
+                  :to="{ name: 'LeagueCalendar', params:{ year: currentYear } }"
                   id="3"
                   value="Календарь лиги"
                   >
                     {{ 'Календарь лиги' }}
                   </v-btn>
                   <v-btn 
-                  :to="{ name: 'TeamCalendar' }"
+                  :to="{ name: 'TeamCalendar', params:{ year: currentYear } }"
                   id="4"
                   value="Календарь одной команды"
                   >
@@ -50,7 +50,7 @@
                   height="200"
                 />
               </v-col>              
-              <v-row v-if="link=='Список лиг'" align="center" justify="center">
+              <v-row v-if="link=='Календарь лиги'" align="center" justify="center">
                 <v-row v-if="show==true" align="center" justify="center">
                   <v-row align="center" justify="center">
                     <v-col cols="auto">                   
@@ -67,8 +67,8 @@
                   <v-row v-if="filters.info.length > 0 || filteredArticles.length > 0" style="padding-bottom:50px" align="center" justify="center">
                     <v-col cols="6">
                       <v-row align="center" justify="center">  
-                        <v-col v-for="(competition, index) in filteredArticles" :key="index" cols="4" class="col1">
-                          {{ index + true + ') ' }} {{ competition.area.name }}
+                        <v-col v-for="competition in filteredArticles" :key="competition.id" cols="4" class="col1">
+                          {{ competition.area.name }}
                           <br>
                           <b>{{ competition.name }}</b>
                           <br>
@@ -119,7 +119,7 @@
     data: () => ({
       link: 'Календарь лиги',
       apikey: '9f28e4475c2c48e3874e3c03a59876d7',
-      currentYear: '2021',
+      currentYear: null,
       info: [],
       searchString: '',
       articles_array: [],
@@ -197,7 +197,7 @@
 
 <style scoped>
   .container {
-    min-width: 1800px;
+    /* min-width: 1800px; */
     font-style:italic;
   }
   .col1 {

@@ -17,21 +17,21 @@
                     {{ 'Список лиг' }}
                   </v-btn>
                   <v-btn 
-                  :to="{ name: 'Teams' }"
+                  :to="{ name: 'Teams', params:{ year: currentYear } }"
                   id="2"
                   value="Список команд"
                   >
                     {{ 'Список команд' }}
                   </v-btn>
                   <v-btn 
-                  :to="{ name: 'LeagueCalendar' }"
+                  :to="{ name: 'LeagueCalendar', params:{ year: currentYear } }"
                   id="3"
                   value="Календарь лиги"
                   >
                     {{ 'Календарь лиги' }}
                   </v-btn>
                   <v-btn 
-                  :to="{ name: 'TeamCalendar' }"
+                  :to="{ name: 'TeamCalendar', params:{ year: currentYear } }"
                   id="4"
                   value="Календарь одной команды"
                   >
@@ -50,7 +50,7 @@
                   height="200"
                 />
               </v-col>              
-              <v-row v-if="link=='Список лиг'" align="center" justify="center">
+              <v-row v-if="link=='Календарь одной команды'" align="center" justify="center">
                 <v-row v-if="show==true" align="center" justify="center">
                   <v-row align="center" justify="center">
                     <v-col cols="auto">                   
@@ -67,12 +67,20 @@
                   <v-row v-if="filters.info.length > 0 || filteredArticles.length > 0" style="padding-bottom:50px" align="center" justify="center">
                     <v-col cols="6">
                       <v-row align="center" justify="center">  
-                        <v-col v-for="(competition, index) in filteredArticles" :key="index" cols="4" class="col1">
-                          {{ index + true + ') ' }} {{ competition.area.name }}
+                        <v-col v-for="team in this.filters.info" :key="team.id" cols="4" class="col1">
+                          {{ team.area.name }}
                           <br>
-                          <b>{{ competition.name }}</b>
+                          <b>{{ team.name }}</b>
                           <br>
-                          {{ competition.plan }}
+                          {{ team.venue }}
+                          <div>
+                            <v-img
+                              max-height="350"
+                              max-width="350"
+                              :src="team.crestUrl"
+                            ></v-img>
+                            
+                          </div>
                         </v-col>
                       </v-row> 
                     </v-col>
@@ -90,15 +98,6 @@
                   </v-row>
                 </v-row>
               </v-row>
-              <!-- <v-row v-if="link=='Список команд'" align="center" justify="center">
-                <teams/>
-              </v-row>
-              <v-row v-if="link=='Календарь лиги'" align="center" justify="center">
-                <league-calendar/>
-              </v-row>               
-              <v-row v-if="link=='Календарь одной команды'" align="center" justify="center">
-                <team-calendar/>
-              </v-row> -->
             </v-row>
           </v-card-text>
         </v-card>
@@ -111,7 +110,6 @@
   import axios from 'axios'
   import Vue from 'vue'
   import Vuex from 'vuex'
-  // import cloneDeep from 'lodash/cloneDeep'
 
   export default {
     name: 'TeamCalendar',
@@ -119,7 +117,7 @@
     data: () => ({
       link: 'Календарь одной команды',
       apikey: '9f28e4475c2c48e3874e3c03a59876d7',
-      currentYear: '2021',
+      currentYear: null,
       info: [],
       searchString: '',
       articles_array: [],
@@ -129,24 +127,36 @@
       }
     }),
     created () {
-      axios.get("https://api.football-data.org/v2/competitions", {headers: {'X-Auth-Token': this.apikey}})
-           .then(response => (this.info = response.data.competitions,
-                              this.filters.info = response.data.competitions)),
-                              console.log(3333, this.$route.query.year)
-                              // ,
-  //     axios.get('http://localhost:8080/?year='+val, {
-  //       params: {
-  //         year: val
-  //     }.then(response => {
-  //       console.log(response)
-  //     })
-  // });      
+      axios.get("https://api.football-data.org/v2/teams", {headers: {'X-Auth-Token': this.apikey}})
+           .then(response => (this.info = response.data.teams, this.filters.info = response.data.teams, this.currentYear = this.$route.params.year.toString()))
+      // ,
+      
+      // axios.get("https://https://api.football-data.org/v2/matches", {headers: {'X-Auth-Token': this.apikey}}, {params: {'dateFrom': '2021-06-25', 'dateTo': '2021-07-05'}})
+      //      .then(response => (this.info = response,
+      //                         this.filters.info = response))  
       },
       
     watch: {
+      info: {
+        handler () {
+          Vue.use(Vuex)
+            const store = new Vuex.Store({
+              state: {
+                info: this.info
+              },
+              getters: {
+                getTeamById: state => id => {
+                  return state.info.find(info => info.id === id);
+                }
+              }
+            });
+          this.filters.info = []
+          this.filters.info[0] = store.getters.getTeamById(58)
+          console.log(this.filters.info)
+        }
+      },
       'filters.info': function (newVal) {
         this.show = true
-        console.log('asd')
       },
       currentYear: {
         handler() {
@@ -161,7 +171,6 @@
               }
             }
           });
-          // console.log(this.info)
           this.filters.info = store.getters.getCompetitionsByYear(this.currentYear)
         }
       }
@@ -197,7 +206,6 @@
 
 <style scoped>
   .container {
-    min-width: 1800px;
     font-style:italic;
   }
   .col1 {

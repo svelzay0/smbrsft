@@ -10,28 +10,28 @@
                   v-model="link"
                 >
                   <v-btn cols="12"
-                  :to="{ name: 'Leagues', params:{ year: '2021' } }"
+                  :to="{ name: 'Leagues', params:{ year: currentYear } }"
                   id="1"
                   value="Список лиг"
                   >
                     {{ 'Список лиг' }}
                   </v-btn>
                   <v-btn 
-                  :to="{ name: 'Teams' }"
+                  :to="{ name: 'Teams', params:{ year: currentYear } }"
                   id="2"
                   value="Список команд"
                   >
                     {{ 'Список команд' }}
                   </v-btn>
                   <v-btn 
-                  :to="{ name: 'LeagueCalendar' }"
+                  :to="{ name: 'LeagueCalendar', params:{ year: currentYear } }"
                   id="3"
                   value="Календарь лиги"
                   >
                     {{ 'Календарь лиги' }}
                   </v-btn>
                   <v-btn 
-                  :to="{ name: 'TeamCalendar' }"
+                  :to="{ name: 'TeamCalendar', params:{ year: currentYear } }"
                   id="4"
                   value="Календарь одной команды"
                   >
@@ -63,6 +63,9 @@
                     <v-col cols="auto">
                       <v-text-field v-model="searchString" label="Поиск"></v-text-field>                  
                     </v-col>
+                    <v-col cols="auto">
+                      {{ 'Количество: '+filteredArticles.length }}
+                    </v-col>
                   </v-row>
                   <v-row v-if="filters.info.length > 0 || filteredArticles.length > 0" style="padding-bottom:50px" align="center" justify="center">
                     <v-col cols="6">
@@ -73,6 +76,13 @@
                           <b>{{ competition.name }}</b>
                           <br>
                           {{ competition.plan }}
+                          <v-row v-if="competition.area.ensignUrl" align="center" justify="center" style="padding:20px">
+                            <v-img
+                              max-height="70"
+                              max-width="100"
+                              :src="competition.area.ensignUrl"
+                            ></v-img>
+                          </v-row>
                         </v-col>
                       </v-row> 
                     </v-col>
@@ -102,7 +112,6 @@
   import axios from 'axios'
   import Vue from 'vue'
   import Vuex from 'vuex'
-  // import cloneDeep from 'lodash/cloneDeep'
 
   export default {
     name: 'Leagues',
@@ -122,11 +131,12 @@
     created () {
       axios
         .get("https://api.football-data.org/v2/competitions", {headers: {'X-Auth-Token': this.apikey}})
-        .then(response => (this.info = response.data.competitions, this.filters.info = response.data.competitions, this.currentYear = this.$route.params.year.toString(), console.log(this.filters.info)))
+        .then(response => (this.info = response.data.competitions, this.filters.info = response.data.competitions, this.currentYear = this.$route.params.year.toString()))
     },
     watch: {
       'filters.info': function (newVal) {
         this.show = true
+        console.log(newVal)
       },
       currentYear: {
         handler() {
@@ -176,7 +186,6 @@
 
 <style scoped>
   .container {
-    min-width: 1800px;
     font-style:italic;
   }
   .col1 {

@@ -21,26 +21,26 @@ const routes = [
     props: (route) => ({ query: route.query.q })
   },
   {
-    path: '/teams',
+    path: '/teams/:year/year',
     name: 'Teams',
-    component: Teams
+    component: Teams,
+    props: (route) => ({ query: route.query.q })
   },
   {
-    path: '/team_calendar',
+    path: '/team_calendar/:year/year',
     name: 'TeamCalendar',
-    component: TeamCalendar
+    component: TeamCalendar,
+    props: (route) => ({ query: route.query.q })
   },
   {
-    path: '/league_calendar',
+    path: '/league_calendar/:year/year',
     name: 'LeagueCalendar',
-    component: LeagueCalendar
+    component: LeagueCalendar,
+    props: (route) => ({ query: route.query.q })
   },
   {
     path: '/about',
     name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   }
 ]

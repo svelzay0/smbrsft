@@ -17,21 +17,21 @@
                     {{ 'Список лиг' }}
                   </v-btn>
                   <v-btn 
-                  :to="{ name: 'Teams' }"
+                  :to="{ name: 'Teams', params:{ year: '2021' } }"
                   id="2"
                   value="Список команд"
                   >
                     {{ 'Список команд' }}
                   </v-btn>
                   <v-btn 
-                  :to="{ name: 'LeagueCalendar' }"
+                  :to="{ name: 'LeagueCalendar', params:{ year: '2021' } }"
                   id="3"
                   value="Календарь лиги"
                   >
                     {{ 'Календарь лиги' }}
                   </v-btn>
                   <v-btn 
-                  :to="{ name: 'TeamCalendar' }"
+                  :to="{ name: 'TeamCalendar', params:{ year: '2021' } }"
                   id="4"
                   value="Календарь одной команды"
                   >
@@ -73,7 +73,6 @@
 
 <style scoped>
   .container {
-    min-width: 1800px;
     font-style:italic;
   }
 
