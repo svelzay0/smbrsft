@@ -46,6 +46,20 @@
     name: 'HelloWorld',
 
     data: () => ({
+      
     }),
+    created () {
+      axios
+      .get('https://api.football-data.org/v2/competitions', {
+        headers: {
+          'X-Auth-Token': '9f28e4475c2c48e3874e3c03a59876d7'
+        }
+      })
+      .then(
+        response => {
+          console.log(response)
+        }
+      ) 
+    },
   }
 </script>
