@@ -24,14 +24,14 @@
                     {{ 'Список команд' }}
                   </v-btn>
                   <v-btn 
-                  :to="{ name: 'LeagueCalendar', params:{ year: '2021' } }"
+                  :to="{ name: 'LeagueCalendar', params:{ year: '2021', id: 2018 } }"
                   id="3"
                   value="Календарь лиги"
                   >
                     {{ 'Календарь лиги' }}
                   </v-btn>
                   <v-btn 
-                  :to="{ name: 'TeamCalendar', params:{ year: '2021' } }"
+                  :to="{ name: 'TeamCalendar', params:{ year: '2021', id: 58 } }"
                   id="4"
                   value="Календарь одной команды"
                   >

@@ -24,14 +24,14 @@
                     {{ 'Список команд' }}
                   </v-btn>
                   <v-btn 
-                  :to="{ name: 'LeagueCalendar', params:{ year: currentYear } }"
+                  :to="{ name: 'LeagueCalendar', params:{ year: currentYear, id: 2018 } }"
                   id="3"
                   value="Календарь лиги"
                   >
                     {{ 'Календарь лиги' }}
                   </v-btn>
                   <v-btn 
-                  :to="{ name: 'TeamCalendar', params:{ year: currentYear } }"
+                  :to="{ name: 'TeamCalendar', params:{ year: currentYear, id: 58 } }"
                   id="4"
                   value="Календарь одной команды"
                   >
@@ -61,7 +61,7 @@
                       <v-icon color="red" @click="yearMinus()">mdi-minus-box</v-icon>
                     </v-col>
                     <v-col cols="auto">
-                      <v-text-field v-model="searchString" label="Поиск"></v-text-field>                  
+                      <v-text-field v-model="searchString" label="Поиск по сущности"></v-text-field>                  
                     </v-col>
                     <v-col cols="auto">
                       {{ 'Количество: '+filteredArticles.length }}
@@ -82,7 +82,16 @@
                               max-width="100"
                               :src="competition.area.ensignUrl"
                             ></v-img>
-                          </v-row>
+                          </v-row>                         
+                          <div style="padding-top:20px">  
+                            <v-btn
+                              style="max-width:20px;font-weight:10px"
+                              dense
+                              color="info"
+                              :to="{ name: 'LeagueCalendar', params:{ year: currentYear, id: competition.id } }">
+                              <v-icon>mdi-calendar-month</v-icon>
+                            </v-btn>                           
+                          </div>
                         </v-col>
                       </v-row> 
                     </v-col>
@@ -174,11 +183,20 @@
     },
     methods: {
       yearPlus () {
-        console.log(parseInt(this.currentYear) + 1)
-        this.currentYear = (parseInt(this.currentYear) + 1).toString()
+        if (this.currentYear == null || this.currentYear == '') {
+          this.currentYear = '2021'
+        }
+        else {
+          this.currentYear = (parseInt(this.currentYear) + 1).toString()
+        } 
       },
       yearMinus () {
-        this.currentYear = (parseInt(this.currentYear) - 1).toString()
+        if (this.currentYear == null || this.currentYear == '') {
+          this.currentYear = '2021'
+        }
+        else {
+          this.currentYear = (parseInt(this.currentYear) - 1).toString()
+        }
       }
     }
   }
